@@ -1,0 +1,67 @@
+---
+title: "Spooky Text Analysis"
+author: "Richard Shin"
+output: html_notebook
+---
+
+# Introduction
+In class, we looked at a dataset, spooky.csv, which contains excerpts of texts from Edgar Allan Poe, H.P. Lovecraft, and Mary Shelley. The analysis of the dataset included using the tidytext library to clean up the data, and then undergoing sentiment analysis as well as topic modeling.
+This 
+
+## Libraries 
+```{r}
+library(ggplot2);library(dplyr);library(tibble)
+library(tidyr);library(stringr);library(tidytext)
+library(topicmodels);library(wordcloud);library(ggridges)
+```
+## Data Overview
+```{r}
+spooky <- read.csv('../data/spooky.csv', as.is = TRUE)
+head(spooky)
+summary(spooky)
+spooky$author <- as.factor(spooky$author)
+```
+## Data reliability and bias
+```{r}
+sum(spooky$author=='EAP')
+sum(spooky$author=='HPL')
+sum(spooky$author=='MWS')
+```
+There are far more EAP excerpts than HPL and MWS.
+
+Verify that there are no missing values in the entire dataset
+```{r}
+sum(is.na(spooky))
+```
+
+## Methods
+Check the top frequency of how much each stop word is used, and see if we should keep some of them in.
+Only use stop words that are longer than 3 characters
+```{r}
+spooky_wrd <- unnest_tokens(spooky, word, text)
+head(spooky_wrd)
+head(stop_words)
+freq_stop = vector()
+stop_words_long= vector()
+for (i in 1:nrow(stop_words)){
+      if (nchar(stop_words[i,1])>3){
+          stop_words_long = rbind(stop_words_long, stop_words[i,1])
+      }
+}
+
+head(stop_words_long)
+summary(stop_words_long)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
