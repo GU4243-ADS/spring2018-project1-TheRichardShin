@@ -14,7 +14,7 @@ library(ggplot2);library(dplyr);library(tibble)
 library(tidyr);library(stringr);library(tidytext)
 library(topicmodels);library(wordcloud);library(ggridges)
 ```
-## Data Overview
+# Data Overview
 ```{r}
 spooky <- read.csv('../data/spooky.csv', as.is = TRUE)
 head(spooky)
@@ -27,16 +27,16 @@ sum(spooky$author=='EAP')
 sum(spooky$author=='HPL')
 sum(spooky$author=='MWS')
 ```
-There are far more EAP excerpts than HPL and MWS.
+There are far more EAP excerpts than HPL and MWS. Perhaps not relevant when finding top words and sentiments for each author, but topic modeling could be affected by this
 
 Verify that there are no missing values in the entire dataset
 ```{r}
 sum(is.na(spooky))
 ```
 
-## Methods
+# Methods
 Check the top frequency of how much each stop word is used, and see if we should keep some of them in.
-Only use stop words that are longer than 3 characters
+Only check stop words that are longer than 3 characters.
 ```{r}
 spooky_wrd <- unnest_tokens(spooky, word, text)
 head(spooky_wrd)
@@ -44,13 +44,42 @@ head(stop_words)
 freq_stop = vector()
 stop_words_long= vector()
 for (i in 1:nrow(stop_words)){
-      if (nchar(stop_words[i,1])>3){
+      if (nchar(stop_words[i,1])>5){
           stop_words_long = rbind(stop_words_long, stop_words[i,1])
       }
 }
 
 head(stop_words_long)
 summary(stop_words_long)
+spooky_wrd_long <- NULL
+for (i in 1:nrow(spooky_wrd)){
+      if (nchar(spooky_wrd[i,3])>5){
+          spooky_wrd_long = rbind(spooky_wrd_long, spooky_wrd[i,3])
+      }
+}
+head(spooky_wrd_long)
+summary(spooky_wrd_long)
+```
+
+## Stop Word Frequency
+```{r}
+stop_words_long$freq<- rep(0,nrow(stop_words_long))
+nxt <- 0
+for (i in 1:nrow(stop_words_long)){
+  for(j in 1:nrow(spooky_wrd_long)){
+    if (stop_words_long[i,1] == spooky_wrd_long[j]){
+      stop_words_long[i,2] = stop_words_long[i,2] + 1
+      }
+    prg <- round(j/nrow(spooky_wrd_long), 2)
+    if (prg == nxt){
+          pcnt <- prg * 100
+          print(pcnt, " percent done. Current word: ",stop_words_long[i,2])
+          nxt = nxt +0.01
+        }
+        
+      
+  }
+}
 ```
 
 
