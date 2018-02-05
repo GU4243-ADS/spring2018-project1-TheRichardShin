@@ -1,9 +1,9 @@
 ---
-title: "Spooky Text Analysis"
+title: "Doubtful"
 author: "Richard Shin"
 output:
-  pdf_document: default
   html_notebook: default
+  pdf_document: default
 ---
 
 # Introduction

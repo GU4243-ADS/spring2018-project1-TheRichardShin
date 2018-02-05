@@ -1,6 +1,5 @@
 # Spring2018
-# Project 1:
-Test edits on readme
+# Project 1: Doubtful
 ----
 
 
@@ -24,4 +23,3 @@ proj/
 └── output/
 ```
 
-Please see each subfolder for a README file.
